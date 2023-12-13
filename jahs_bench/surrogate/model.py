@@ -454,7 +454,7 @@ class XGBSurrogate:
     def load(cls, outdir: Path) -> XGBSurrogate:
         """ Load a previously saved surrogate from disk and return it. """
 
-        with open(os.path.join(str(outdir), cls.__params_filename)) as f:
+        with open(os.path.join(str(outdir), cls.__params_filename), 'r', encoding='utf8') as f:
             params: dict = json.load(f)
         surrogate = cls()
         for k, v in params.items():
