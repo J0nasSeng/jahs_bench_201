@@ -454,8 +454,10 @@ class XGBSurrogate:
     def load(cls, outdir: Path) -> XGBSurrogate:
         """ Load a previously saved surrogate from disk and return it. """
 
-        with open(os.path.join(str(outdir), cls.__params_filename), 'r', encoding='utf8') as f:
-            params: dict = json.load(f)
+        with open(os.path.join(str(outdir), cls.__params_filename), 'r') as f:
+            json_string = ''.join(f.readlines())
+        params: dict = json.loads(json_string)
+
         surrogate = cls()
         for k, v in params.items():
             if k == 'config_space':
