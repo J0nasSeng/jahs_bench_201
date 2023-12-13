@@ -25,6 +25,7 @@ import yacs.config as config
 from jahs_bench.lib.core import utils as core_utils
 from jahs_bench.lib.core.configspace import joint_config_space
 from jahs_bench.surrogate import utils as surrogate_utils, config
+from sklearn.preprocessing import OneHotEncoder
 
 _log = logging.getLogger(__name__)
 ConfigType = Union[dict, ConfigSpace.Configuration]
@@ -485,6 +486,10 @@ class XGBSurrogate:
         if surrogate.trained_:
             label_headers: pd.Series = pd.read_pickle(outdir / cls.__headers_filename)
             model = joblib.load(outdir / cls.__model_filename)
+
+            # we're using scikit-learn 1.1.3 -> make compatible with 1.0.2
+            if isinstance(model, OneHotEncoder):
+                model.__setattr__('_infrequent_enabled', False)
 
             surrogate.label_headers = pd.Index(label_headers)
             surrogate.model = model
