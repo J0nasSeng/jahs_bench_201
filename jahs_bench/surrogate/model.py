@@ -41,6 +41,7 @@ class XGBSurrogate:
     trained_: bool
 
     __params_filename = "params.pkl.gz"
+    __params_filename_json = "params.json"
     __headers_filename = "label_headers.pkl.gz"
     __model_filename = "model.pkl.gz"
     __param_keys = ["estimators_per_output", "hyperparams", "config_space",
@@ -454,10 +455,8 @@ class XGBSurrogate:
     def load(cls, outdir: Path) -> XGBSurrogate:
         """ Load a previously saved surrogate from disk and return it. """
 
-        print(os.path.join(str(outdir), cls.__params_filename))
-        with open(os.path.join(str(outdir), cls.__params_filename), 'r') as f:
-            json_string = ''.join(f.readlines())
-        params: dict = json.loads(json_string)
+        with open(os.path.join(str(outdir), cls.__params_filename_json), 'r') as f:
+            params: dict = json.load(f)
 
         surrogate = cls()
         for k, v in params.items():
