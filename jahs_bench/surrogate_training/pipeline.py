@@ -131,6 +131,10 @@ def train_surrogate_with_correct_config(working_directory: Path, datadir: Path, 
 
     NOTE: This function replaces `perform_hpo` in the original JAHS codebase.
 
+    NOTE: Requires that the directory `jahs_bench_201/data/metric_data/` exists and that the train, val and test split data 
+        exists in for each dataset in a sub-directory named as the dataset (e.g. jahs_bench_201/data/metric_data/cifar10/train_set.pkl.gz) 
+        for the training data for the cifar10-surrogate).
+
     Args:
         working_directory (Path): _description_
         datadir (Path): _description_
