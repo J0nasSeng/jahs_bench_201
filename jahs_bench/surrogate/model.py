@@ -456,6 +456,7 @@ class XGBSurrogate:
 
         with open(os.path.join(str(outdir), cls.__params_filename), 'r') as f:
             json_string = ''.join(f.readlines())
+            print(json_string)
         params: dict = json.loads(json_string)
 
         surrogate = cls()
