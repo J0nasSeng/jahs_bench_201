@@ -459,34 +459,29 @@ class XGBSurrogate:
         with open(os.path.join(str(outdir), cls.__params_filename_json), 'r') as f:
             params: dict = json.load(f)
 
-        params: dict = joblib.load(outdir / cls.__params_filename)
         surrogate = cls()
         for k, v in params.items():
-            surrogate.__setattr__(k, v)
-
-        #surrogate = cls()
-        #for k, v in params.items():
-        #    if k == 'config_space':
-        #        cs = ConfigSpace.ConfigurationSpace('jahs_bench_config_space')
-        #        for hp_dict in v:
-        #            if hp_dict['type'] == 'UniformFloatHyperparameter':
-        #                del hp_dict['type']
-        #                hp = ConfigSpace.UniformFloatHyperparameter(**hp_dict)
-        #                cs.add_hyperparameter(hp)
-        #            elif hp_dict['type'] == 'OrdinalHyperparameter':
-        #                del hp_dict['type']
-        #                hp = ConfigSpace.OrdinalHyperparameter(**hp_dict)
-        #                cs.add_hyperparameter(hp)
-        #            elif hp_dict['type'] == 'CategoricalHyperparameter':
-        #                del hp_dict['type']
-        #                hp = ConfigSpace.CategoricalHyperparameter(**hp_dict)
-        #                cs.add_hyperparameter(hp)
-        #        surrogate.__setattr__(k, cs)
-        #    elif k in ['label_headers', 'feature_headers']:
-        #        idx = pd.Index(v)
-        #        surrogate.__setattr__(k, idx)
-        #    else:
-        #        surrogate.__setattr__(k, v)                
+            if k == 'config_space':
+                cs = ConfigSpace.ConfigurationSpace('jahs_bench_config_space')
+                for hp_dict in v:
+                    if hp_dict['type'] == 'UniformFloatHyperparameter':
+                        del hp_dict['type']
+                        hp = ConfigSpace.UniformFloatHyperparameter(**hp_dict)
+                        cs.add_hyperparameter(hp)
+                    elif hp_dict['type'] == 'OrdinalHyperparameter':
+                        del hp_dict['type']
+                        hp = ConfigSpace.OrdinalHyperparameter(**hp_dict)
+                        cs.add_hyperparameter(hp)
+                    elif hp_dict['type'] == 'CategoricalHyperparameter':
+                        del hp_dict['type']
+                        hp = ConfigSpace.CategoricalHyperparameter(**hp_dict)
+                        cs.add_hyperparameter(hp)
+                surrogate.__setattr__(k, cs)
+            elif k in ['label_headers', 'feature_headers']:
+                idx = pd.Index(v)
+                surrogate.__setattr__(k, idx)
+            else:
+                surrogate.__setattr__(k, v)                
 
         if surrogate.trained_:
             label_headers: pd.Series = pd.read_pickle(outdir / cls.__headers_filename)
